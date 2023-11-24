@@ -59,21 +59,24 @@ int creat_one_procces(int &wp){
     }
     int pid = fork();
     if (pid == 0) {
+        cout << "in childdd\n";
         dup2(p[0], STDIN_FILENO);
         close(p[0]);
-        execl(BIULD_EXE.c_str() ,  BIULD_EXE.c_str() , NULL);
-        perror("execl");
+        close(p[1]);
+        int en = execl(BIULD_EXE.c_str() ,  BIULD_EXE.c_str() , NULL);
+        cout << "after it" << en << "\n" ;
     } else if (pid > 0) {
         close(p[0]);
         wp = p[1];
     }else{
-        perror("fork");
+        cout << "can't make child\n";
     }
     return pid;
 }
 
 
-int   creat_proc(vector<string> &build_lst ,vector<int>& build_pid_lst ,string building_dir){
+int   creat_proccess(vector<string> &build_lst ,vector<int>& build_pid_lst ,
+        vector<int> &write_pipe_lst,string building_dir){
     cout << "number of buildings is " << Red_COLOR << build_lst.size() << 
     RESET_COLOR << "\nbuildings: ";
     for(int i=0;i<build_lst.size() ; i++){
@@ -82,7 +85,11 @@ int   creat_proc(vector<string> &build_lst ,vector<int>& build_pid_lst ,string b
 
     cout << "\n";
     for(int i=0;i<build_lst.size() ; i++){
-        
+        int wp=-1;
+        build_pid_lst[i] = creat_one_procces(wp);
+        write(wp , build_lst[i].c_str() ,build_lst[i].size());
+
+        cout << "num"<< wp << "\n";
     }
 
     cout << endl;
@@ -92,6 +99,8 @@ int   creat_proc(vector<string> &build_lst ,vector<int>& build_pid_lst ,string b
 
 
 int main(int argc , const char *argv[]){
+    ios_base::sync_with_stdio(false);
+    cin.tie(NULL);
     if(argc < 2){
         cout << "input not valid\n";
         return 1;
@@ -99,8 +108,10 @@ int main(int argc , const char *argv[]){
     string building_dir = (string)  argv[1];
     vector<string> build_lst = find_builds(building_dir);
     vector<int> build_pid_lst(build_lst.size());
+    vector<int> write_pipe_lst(build_lst.size());
+
     int office_pid=-1;
-    creat_proc(build_lst , build_pid_lst , building_dir);
+    creat_proccess(build_lst , build_pid_lst ,write_pipe_lst ,  building_dir);
     
 
     

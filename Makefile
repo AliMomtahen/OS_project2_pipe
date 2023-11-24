@@ -1,18 +1,14 @@
 CC = g++
 
-# all : .out customer.out supplier.out
+all : building.out master.out 
 
-restaurant.out :  restaurant.c
-	$(CC) restaurant.c -o restaurant.out
+master.out : master.cpp 
+	$(CC) master.cpp -o master.out
+
+building.out :  building.cpp
+	$(CC) building.cpp -o building.out
 
 
-customer.out : customer.c json.h
-	$(CC) customer.c -o customer.out
 
-supplier.out : supplier.c 
-	$(CC) supplier.c -o supplier.out
-
-a.out : cJSON.h cJSON.c temp.c
-	$(CC) temp.c -o a.out
 
 

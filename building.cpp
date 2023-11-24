@@ -13,9 +13,19 @@
 #include <unistd.h>
 #include <sys/stat.h>
 
-int main(){
 
+using namespace std;
+
+int main(){
+    ios_base::sync_with_stdio(false);
+    cin.tie(NULL);
     std::cout << "in child\n";
+    string h;
+    cin >> h;
+    cout << "my name is " << h << '\n';
+    FILE *k = fopen("ooo.txt" , "w");
+    fprintf(k , "yes yes");
+    
 
     return 0;
 }
