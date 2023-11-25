@@ -16,15 +16,22 @@
 
 using namespace std;
 
-int main(){
+int main(int argc , const char *argv[]){
     ios_base::sync_with_stdio(false);
     cin.tie(NULL);
-    std::cout << "in child\n";
-    string h;
-    cin >> h;
-    cout << "my name is " << h << '\n';
+    string my_data_path = (string) argv[1];
+    //int father_wfd = stoi(arg);
+    // std::cout <<"in child" << endl;
+    // cin >> s;
+   write(STDOUT_FILENO ,argv[1] , 15);
+
+
+    //write(father_wfd , "helow f" , 8);
+    // string h;
+    // cin >> h;
+    // cout << "my name is " << h << '\n';
     FILE *k = fopen("ooo.txt" , "w");
-    fprintf(k , "yes yes");
+    
     
 
     return 0;
