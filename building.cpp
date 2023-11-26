@@ -85,8 +85,8 @@ int main(int argc , const char *argv[]){
     cin.tie(NULL);
     string my_data_path = (string) argv[1];
     //sleep(10);
-    
-    get_data_file(my_data_path);
+    struct Data_src *data = new struct Data_src;
+    get_data_file(my_data_path , data);
     
     // string fifo_office = "np/" +  my_data_path + "_FIFO1";
     //  mkfifo(fifo_office.c_str(), 0666);
