@@ -17,7 +17,11 @@
 
 using namespace std;
 
-
+struct Data_src{
+    string gas_data;
+    string water_data;
+    string elec_data;
+};
 
 void handle_command(){
 
@@ -46,9 +50,9 @@ int make_proc(string my_data_path ,string exe_file  ,int & water_r){
     return pid;
 }
 
-void get_data_file(string my_data_path){
+void get_data_file(string my_data_path , struct Data_src * data){
     
-    Build_info * myinfo= new Build_info();
+    
     ofstream *fd = new ofstream("ggg.txt");
      
     
@@ -61,11 +65,15 @@ void get_data_file(string my_data_path){
     int pid_elec = make_proc(my_data_path ,ELEC_EXE  , elec_r);
     int status;
     
-    char inp[1024];
+    char inp[1024] , inp1[1024] , inp2[1024];
     read(gas_r , inp , 1024);
-    cout <<"inja " <<(string) inp << endl;
+     data->gas_data = (string) inp;
+    read(gas_r , inp1 , 1024);
+    data->water_data = (string) inp1;
+    read(gas_r , inp2 , 1024);
+    data->elec_data = (string) inp2;
 
-    cout << "wtf" << endl;
+    
     waitpid(pid_elec , &status , 0);
     waitpid(pid_gas , &status , 0);
     waitpid(pid_water , &status , 0);

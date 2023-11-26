@@ -38,7 +38,13 @@ const string ELEC_CSV = "Electricity.csv";
 const string GAS_CSV = "Gas.csv";
 
 
-
+const vector<string> Indicators = {
+    "average",
+    "total usage",
+    "high usage huor",
+    "bill",
+    "diff peak and average",
+};
 
 
 vector<string> getWords(string s , string spliter){
