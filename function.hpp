@@ -134,7 +134,6 @@ public:
     vector<double> aver_lst;
     vector<int> high_usage_lst;
     vector<int> total_usage_in_high_hour;
-    vector<int> total_usage_in_high_hour;
     vector<int> total_usage_less_than_aver;
 
     vector<int> total_usage;
@@ -153,7 +152,7 @@ public:
         high_usage_lst.resize(13);
         total_usage_in_high_hour.resize(13);
         total_usage_less_than_aver.resize(13);
-
+        diff_high_aver.resize(13);
         
         cost_lst.resize(13);
         aver_lst.resize(13);
@@ -175,6 +174,28 @@ public:
     void get_data(string &str){
         str="";
         str += (to_string(type) + "\n");
+        for(int i=1;i<13;i++){
+            str += (to_string(aver_lst[i]) + " ");
+        }
+        str += "\n";
+        for(int i=1;i<13;i++){
+            str += (to_string(total_usage[i]) + " ");
+        }
+        str += "\n";
+
+        for(int i=1;i<13;i++){
+            str += (to_string(high_usage_lst[i]) + " ");
+        }
+        str += "\n";
+        for(int i=1;i<13;i++){
+            str += (to_string(total_usage_in_high_hour[i]) + " ");
+        }
+        str += "\n";
+        for(int i=1;i<13;i++){
+            str += (to_string(diff_high_aver[i]) + " ");
+        }
+        str += "\n";
+        
         //todo
     }
 };
@@ -213,6 +234,39 @@ Build_info::Build_info(/* args */)
 
 Build_info::~Build_info()
 {
+}
+
+
+
+Info * read_data(fstream *file , int type){
+    Info *data = new Info(type);
+    string line;
+    char inp4[1024];
+    file->getline(inp4 , 1024);
+    
+    while (1)
+    {
+        char inp[128];
+        file->getline(inp , 128);
+        line = (string) inp;
+        if(line.size() < 3)
+            break;
+        vector<string> words = getWords(line , ",");
+        int d = stoi(words[2]);
+        vector<int> day_info;
+        int m = stoi(words[1]);
+        
+       
+        for(int i=3 ; i < words.size(); i++){
+            day_info.push_back(stoi(words[i]));
+            
+        }
+        data->add_info_day(m , d , day_info);
+    }
+
+
+    return data;
+    
 }
 
 

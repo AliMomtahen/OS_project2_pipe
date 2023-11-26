@@ -54,12 +54,18 @@ void get_data_file(string my_data_path){
     
     *fd << "hkhk5555hkhk";
     fd->close();
+    
     int water_r , gas_r , elec_r; 
     int pid_water = make_proc(my_data_path ,WATER_EXE  , water_r);
-    int pid_gas = make_proc(my_data_path ,GAS_EXE  , water_r);
-    int pid_elec = make_proc(my_data_path ,ELEC_EXE  , water_r);
+    int pid_gas = make_proc(my_data_path ,GAS_EXE  , gas_r);
+    int pid_elec = make_proc(my_data_path ,ELEC_EXE  , elec_r);
     int status;
     
+    char inp[1024];
+    read(gas_r , inp , 1024);
+    cout <<"inja " <<(string) inp << endl;
+
+    cout << "wtf" << endl;
     waitpid(pid_elec , &status , 0);
     waitpid(pid_gas , &status , 0);
     waitpid(pid_water , &status , 0);
