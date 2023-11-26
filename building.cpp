@@ -31,7 +31,7 @@ int make_proc(string my_data_path ,string exe_file  ,int & water_r){
     }
     int pid = fork();
     if (pid == 0) {
-        //dup2(p2[1] ,STDOUT_FILENO );
+        dup2(p2[1] ,STDOUT_FILENO );
         close(p2[0]);
         close(p2[1]);
         static char *args[] = { (char *) exe_file.c_str() ,(char*) my_data_path.c_str()  , NULL };

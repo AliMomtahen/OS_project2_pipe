@@ -22,7 +22,7 @@ Info * read_data(fstream *file){
         int d = stoi(words[2]);
         vector<int> day_info;
         int m = stoi(words[1]);
-        cout << m << " " << d << "word size =" << words.size() <<  endl;
+        //cout << m << " " << d << "word size =" << words.size() <<  endl;
        
         for(int i=3 ; i < words.size(); i++){
             day_info.push_back(stoi(words[i]));
@@ -31,19 +31,31 @@ Info * read_data(fstream *file){
         data->add_info_day(m , d , day_info);
     }
 
+
     return data;
     
+}
+
+
+void send_data(Info *data){
+    string data_str = "";
+    data->get_data(data_str);
+
 }
 
 int main(int argc , const char *argv[]){
     ios_base::sync_with_stdio(false);
     cin.tie(NULL);
-    cout << "in gas" << endl; 
+    //cout << "in gas" << endl; 
     string my_folder = (string)  argv[1];
     string file_string = my_folder + "/" + GAS_CSV;
     fstream *file = new fstream(file_string.c_str());
     
     Info *data = read_data(file);
+    data->calc_average_total_and_dist();
+    
+    send_data(data);
+    
     
     
 }

@@ -133,7 +133,7 @@ void   send_line_to_pipe(int office_pipe_w , vector<string>& build_lst){
 int   creat_proccess(vector<string> &build_lst ,vector<int>& build_pid_lst ,
         vector<int> &read_pipe_lst,string building_dir , int& office_pid){
     cout << "number of buildings is " << Red_COLOR << build_lst.size() << 
-    RESET_COLOR << "\nbuildings: ";
+    Yellow_COLOR << "\nbuildings: \n" <<RESET_COLOR;
     for(int i=0;i<build_lst.size() ; i++){
         cout <<  Yellow_COLOR<< i+1<<"- " << RESET_COLOR << build_lst[i] << endl;
         

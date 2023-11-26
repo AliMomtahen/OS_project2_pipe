@@ -91,10 +91,20 @@ public:
         }
 
         total_usage = total;
-        double average= total / (30.0 * 6.0); 
+        double average= total / (30.0 ); 
         high_h = high_hour;
         return average;
     }
+
+    int calc_total_in_high(){
+        int tot=0;
+        for(auto d : day_lst){
+            tot+=d[high_h];
+        }
+        return tot;
+    }
+
+    
 };
 
 MonthInfo::MonthInfo(/* args */)
@@ -123,6 +133,10 @@ public:
     vector<MonthInfo> month_lst;
     vector<double> aver_lst;
     vector<int> high_usage_lst;
+    vector<int> total_usage_in_high_hour;
+    vector<int> total_usage_in_high_hour;
+    vector<int> total_usage_less_than_aver;
+
     vector<int> total_usage;
     vector<int> cost_lst;
     vector<double> diff_high_aver;
@@ -137,12 +151,17 @@ public:
         aver_lst.resize(13);
         total_usage.resize(13);
         high_usage_lst.resize(13);
+        total_usage_in_high_hour.resize(13);
+        total_usage_less_than_aver.resize(13);
+
         
         cost_lst.resize(13);
         aver_lst.resize(13);
         for(int i=1;i<13;i++){
-            
             aver_lst[i] = month_lst[i].calc_usage(total_usage[i] , high_usage_lst[i]);
+        }
+        for(int i=1; i < 13; i++){
+            total_usage_in_high_hour[i] = month_lst[i].calc_total_in_high();
         }
 
     }
@@ -151,6 +170,13 @@ public:
 
     }
     
+
+
+    void get_data(string &str){
+        str="";
+        str += (to_string(type) + "\n");
+        //todo
+    }
 };
 
 Info::Info(int t)
