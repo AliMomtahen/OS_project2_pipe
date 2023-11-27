@@ -20,7 +20,7 @@ void send_data(Info *data){
 int main(int argc , const char *argv[]){
     ios_base::sync_with_stdio(false);
     cin.tie(NULL);
-    //cout << "in gas" << endl; 
+     
     string my_folder = (string)  argv[1];
     string file_string = my_folder + "/" + GAS_CSV;
     fstream *file = new fstream(file_string.c_str());

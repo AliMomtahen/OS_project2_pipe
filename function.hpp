@@ -36,6 +36,7 @@ const string  OFFICE_EXE = "./office.out";
 const string WATER_CSV = "Water.csv";
 const string ELEC_CSV = "Electricity.csv";
 const string GAS_CSV = "Gas.csv";
+const string BILLS = "bills.csv";
 
 
 const vector<string> Indicators = {
@@ -71,7 +72,7 @@ private:
 public:
     int id;
     int total_usage;
-    double average;
+    int average;
     int high_h;
     vector<vector<int> > day_lst;
     MonthInfo(/* args */);
@@ -80,7 +81,7 @@ public:
         day_lst[d] = info;
     }
 
-    double calc_usage(int& total , int& high_hour){
+    int calc_usage(int& total , int& high_hour){
         total = 0;high_hour = 0;
         vector<int> h(6 , 0);
         int curr =0;
@@ -97,7 +98,7 @@ public:
         }
 
         total_usage = total;
-        double average= total / (30.0 ); 
+        int average= total / (30 ); 
         high_h = high_hour;
         return average;
     }
@@ -137,14 +138,14 @@ public:
     int year;
     int type;
     vector<MonthInfo> month_lst;
-    vector<double> aver_lst;
+    vector<int> aver_lst;
     vector<int> high_usage_lst;
     vector<int> total_usage_in_high_hour;
     vector<int> total_usage_less_than_aver;
 
     vector<int> total_usage;
     vector<int> cost_lst;
-    vector<double> diff_high_aver;
+    vector<int> diff_high_aver;
 
     
     Info(int t);

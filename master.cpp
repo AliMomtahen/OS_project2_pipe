@@ -62,7 +62,7 @@ int creat_one_procces(int &wp , int& rp , string bname){
     if (pid == 0) {
         cout << "in childdd" << endl;
         
-        //dup2(p2[1] ,STDOUT_FILENO );
+        dup2(p2[1] ,STDOUT_FILENO );
         
         
         close(p2[0]);
@@ -145,16 +145,16 @@ int   creat_proccess(vector<string> &build_lst ,vector<int>& build_pid_lst ,
     for(int i=0;i<build_lst.size() ; i++){
         int wp=-1 , rp=-1;
         build_pid_lst[i] = creat_one_procces(wp , rp ,building_dir+ "/"+ build_lst[i]);
-        char g[100];
-        int r = read(rp , g , 100);
-        string s = (string) g;
-        cout <<  s + "Ali" << endl ;
-        // write(wp , build_lst[i].c_str() ,build_lst[i].size());
+        // char g[100];
+        // int r = read(rp , g , 100);
+        // string s = (string) g;
+        // cout <<  s + "Ali" << endl ;
+        // // write(wp , build_lst[i].c_str() ,build_lst[i].size());
         read_pipe_lst[i] = rp;
 
         
 
-        close(rp);
+        
     }
 
     cout << endl;
@@ -199,8 +199,14 @@ int main(int argc , const char *argv[]){
     cout << "end" << endl;
     for(int i=0 ; i < build_lst.size();i++){
         int status;
-        cout << build_pid_lst[i] << endl;
+        //cout << build_pid_lst[i] << endl;
+        char inp[2048];
+        read(read_pipe_lst[i] , inp , 2048);
+        close(read_pipe_lst[i]);
+        cout << "result for bulding " << build_lst[i] <<  (string) inp << endl;
+        cout << "*************" << endl;
         waitpid(build_pid_lst[i] , &status , 0);
+        
     }
     
 }
