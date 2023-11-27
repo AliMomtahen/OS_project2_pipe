@@ -33,18 +33,21 @@ const string GAS_EXE =  "./Gas.out";
 const string WATER_EXE =  "./Water.out";
 const string  OFFICE_EXE = "./office.out";
 
+
 const string WATER_CSV = "Water.csv";
 const string ELEC_CSV = "Electricity.csv";
 const string GAS_CSV = "Gas.csv";
 const string BILLS = "bills.csv";
+const string  LOG_TXT = "log.txt";
 
 
 const vector<string> Indicators = {
     "average",
     "total usage",
-    "high usage huor",
-    "bill",
+    "peak huor",
+    "total usage in peak",
     "diff peak and average",
+    "bill",
 };
 
 
@@ -64,6 +67,14 @@ vector<string> getWords(string s , string spliter){
     return res;
 }
 
+void print_log(string s){
+    ofstream f;
+    
+    
+    f.open(LOG_TXT , ios::app);
+    f << s << endl;
+    f.close();
+}
 
 class MonthInfo
 {
@@ -110,6 +121,8 @@ public:
         }
         return tot;
     }
+
+    
 
     
 };
@@ -169,11 +182,14 @@ public:
         for(int i=1; i < 13; i++){
             total_usage_in_high_hour[i] = month_lst[i].calc_total_in_high();
         }
+        calc_diff();
 
     }
 
     void calc_diff(){
-
+        for(int i=1;i < 13 ; i++){
+            diff_high_aver[i] = total_usage_in_high_hour[i] / 30  - (aver_lst[i]  / 6);
+        }
     }
     
 

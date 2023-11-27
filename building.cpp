@@ -54,8 +54,7 @@ void get_data_file(string my_data_path , struct Data_src * data){
     ofstream *fd = new ofstream("ggg.txt");
      
     
-    *fd << "hkhk5555hkhk";
-    fd->close();
+    
     
     int water_r , gas_r , elec_r; 
     int pid_water = make_proc(my_data_path ,WATER_EXE  , water_r);
@@ -70,6 +69,7 @@ void get_data_file(string my_data_path , struct Data_src * data){
     data->water_data = (string) inp1;
     read(elec_r , inp2 , 1024);
     data->elec_data = (string) inp2;
+    print_log(my_data_path +  "get data from src");
 
     
     waitpid(pid_elec , &status , 0);
@@ -97,7 +97,7 @@ void send_to_office(string fifo_office , Data_src *data){
 
     vector<string> bills = getWords((string) inp , "$");
 
-    //cerr<< "goooooood " << bills[2] << "enddd" << endl;
+    
     
     close(fifo_id);
     data->gas_data += (bills[0] + "\n");
@@ -118,6 +118,7 @@ int main(int argc , const char *argv[]){
     ios_base::sync_with_stdio(false);
     cin.tie(NULL);
     string my_data_path = (string) argv[1];
+    print_log(my_data_path +  "start work");
     
     struct Data_src *data = new struct Data_src;
     get_data_file(my_data_path , data);
@@ -128,13 +129,10 @@ int main(int argc , const char *argv[]){
     
     send_to_office(fifo_office , data);
     send_to_main(data);
-    // cout << "khkkkkkkkkkkkk "<< data->elec_data << endl;
-    // read(fifo_id , inp ,1024);
-    //cout << "rsv "<< my_data_path<< " "<< (string) inp << endl;
-    //cout << "hhhhh" << endl;
-    //write(STDOUT_FILENO ,argv[1] , 15);
-    //FILE *k = fopen("ooo.txt" , "w");
     
+    
+    close(STDOUT_FILENO);
+    print_log(my_data_path +  "finsh");
     
 
     return 0;

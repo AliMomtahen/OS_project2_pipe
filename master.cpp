@@ -13,6 +13,7 @@
 #include <fstream>
 #include <unistd.h>
 #include <sys/stat.h>
+#include<set>
 #include"function.hpp"
 
 using namespace std;
@@ -34,7 +35,7 @@ vector<string> find_builds(string building_dir){
     vector<string> build_lst;
     DIR *dir;
     struct dirent *ent;
-
+    print_log("read building name");
     if ((dir = opendir (building_dir.c_str())) != NULL) {
         while ((ent = readdir (dir)) != NULL) {
             if (ent->d_type == DT_DIR && ((string) ent->d_name) != "." && 
@@ -60,7 +61,7 @@ int creat_one_procces(int &wp , int& rp , string bname){
     }
     int pid = fork();
     if (pid == 0) {
-        cout << "in childdd" << endl;
+        
         
         dup2(p2[1] ,STDOUT_FILENO );
         
@@ -72,14 +73,12 @@ int creat_one_procces(int &wp , int& rp , string bname){
         string data = to_string(p[1]);
         int en = execv(BIULD_EXE.c_str() , args);
         exit(1);
-        //cout << "after it" << en << "\n" ;
+        
     } else if (pid > 0) {
-        // dup2(p[0], STDIN_FILENO);
+        
         rp = p2[0];
         close(p2[1]);
-        // wp = p[1];
-        // close(p[0]);
-        // write(wp , "hasssss" , 8);
+        
         
     }else{
         cout << "can't make child\n";
@@ -95,7 +94,7 @@ int make_office_proc(int& wp , string bname){
     }
     int pid = fork();
     if (pid == 0) {
-        cout << "in office childdd" << endl;
+       
         
         dup2(p2[0] ,STDIN_FILENO );
         
@@ -124,7 +123,8 @@ void   send_line_to_pipe(int office_pipe_w , vector<string>& build_lst){
         data += s;
         data += " ";
     }
-    cout << "in send" << endl;
+    print_log("send data to pipe from main");
+    
     write(office_pipe_w , data.c_str() , data.size());
 }
 
@@ -145,16 +145,8 @@ int   creat_proccess(vector<string> &build_lst ,vector<int>& build_pid_lst ,
     for(int i=0;i<build_lst.size() ; i++){
         int wp=-1 , rp=-1;
         build_pid_lst[i] = creat_one_procces(wp , rp ,building_dir+ "/"+ build_lst[i]);
-        // char g[100];
-        // int r = read(rp , g , 100);
-        // string s = (string) g;
-        // cout <<  s + "Ali" << endl ;
-        // // write(wp , build_lst[i].c_str() ,build_lst[i].size());
+        
         read_pipe_lst[i] = rp;
-
-        
-
-        
     }
 
     cout << endl;
@@ -162,52 +154,150 @@ int   creat_proccess(vector<string> &build_lst ,vector<int>& build_pid_lst ,
 }
 
 
+struct Set_sets{
+    set<string> req_build;
+    set<string> req_src;
+    set<int> req_indicator;
+};
+
+
+
+void print_indec_first(){
+    cout << Green_COLOR <<  "we can calculate 6 indicator\n" << RESET_COLOR << endl;
+    for(int i=0 ;i < 6 ;i++){
+        cout << Yellow_COLOR << i << "- " << Indicators[i] << RESET_COLOR << endl; 
+    }
+
+}
 
 void get_input_and_send_data(vector<string> &build_lst ,vector<int>& build_pid_lst ,
-        vector<int> &read_pipe_lst){
+        vector<int> &read_pipe_lst , struct Set_sets *req_set){
+    print_log("get input");
 
-            string lin1 , lin2;
-            cout << Green_COLOR <<  "pleas inter sources:" << RESET_COLOR << endl;
+            string lin1 , lin2 , lin3;
+            cout << Green_COLOR <<  "the sources is 0-gas 1-water 2-electricity\npleas inter id of sources:" << RESET_COLOR << endl;
             getline(cin , lin1);
             cout << Green_COLOR <<  "pleas inter buildings:" << RESET_COLOR << endl;
             getline(cin , lin2);
+            print_indec_first();
+            cout << Green_COLOR <<  "pleas inter id of indecator you need:" << RESET_COLOR << endl;
+            getline(cin , lin3);
             vector<string> req_src = getWords(lin1 , " ");
             vector<string> req_build = getWords(lin2 , " ");
+            vector<string> req_indic = getWords(lin3 , " ");
+            for(auto r : req_src){
+                req_set->req_src.insert(r);
+            }
+            for(auto r : req_build){
+                req_set->req_build.insert(r);
+            }
+            for(auto r : req_indic){
+                req_set->req_indicator.insert(stoi(r));
+            }
 
 
 }
 
 
+void print_buty(vector<vector<string>> lst){
+    for(auto l : lst)
+        {
+            for(auto c : l)
+                cout << c << " ";
+            cout << endl;
+        }
+}
+void print_src(struct Set_sets *req_set , string data){
+    
+    auto word = getWords(data , "\n");
+    vector<vector<string>> str_d(1);
+    str_d[0].push_back("indicator");
+    switch (stoi(word[0]))
+    {
+    case 1:
+        cout << Red_COLOR << "gas report:" << RESET_COLOR << endl;
+        break;
+    case 2:
+        cout << Red_COLOR << "water report:" << RESET_COLOR << endl;
+
+    break;
+    case 3:
+        cout << Red_COLOR << "electricity report:" << RESET_COLOR << endl;
+
+    break;
+    default:
+        break;
+    }
+    for(int i=0;i<12;i++){
+        auto s="";
+        if(i < 9)
+            s = "0";
+        str_d[0].push_back(s + to_string(i+1));
+
+    }
+    int size=0;
+    for(auto i : req_set->req_indicator){
+        if(i >= 6)
+            continue;
+        str_d.push_back({});
+        size++;
+        str_d[size].push_back(Indicators[i]);
+        auto d = getWords(word[i+1] , " ");
+        for(auto ds : d){
+            str_d[size].push_back(ds);
+        }
+    }
+    print_buty(str_d);
+    
+}
+
+void print_result(string build_name , string data , struct Set_sets *req_set){
+    if(req_set->req_build.find(build_name) == req_set->req_build.end())
+        return ;
+    print_log("print result " + build_name);
+    cout << Green_COLOR << "report for " << build_name << ":" << RESET_COLOR << endl;
+    vector<string> srcs = getWords(data , "$");
+    for(auto r : req_set->req_src){
+        int src_id= stoi(r);
+        
+        print_src(req_set , srcs[src_id -1]);
+    }
+    
+
+}
+
 
 int main(int argc , const char *argv[]){
     ios_base::sync_with_stdio(false);
     cin.tie(NULL);
-    
+    print_log("start work main");
     if(argc < 2){
         cout << "input not valid\n";
         return 1;
     }
+
     string building_dir = (string)  argv[1];
     vector<string> build_lst = find_builds(building_dir);
     vector<int> build_pid_lst(build_lst.size());
     vector<int> read_pipe_lst(build_lst.size());
-
+    struct Set_sets *req_set = new struct Set_sets;
     int office_pid=-1;
     creat_proccess(build_lst , build_pid_lst ,read_pipe_lst ,  building_dir , office_pid);
-    //get_input_and_send_data(build_lst , build_pid_lst ,read_pipe_lst);
-   
-    cout << "end" << endl;
+    get_input_and_send_data(build_lst , build_pid_lst ,read_pipe_lst , req_set);
+    
     for(int i=0 ; i < build_lst.size();i++){
         int status;
-        //cout << build_pid_lst[i] << endl;
+        
         char inp[2048];
         read(read_pipe_lst[i] , inp , 2048);
         close(read_pipe_lst[i]);
-        cout << "result for bulding " << build_lst[i] <<  (string) inp << endl;
-        cout << "*************" << endl;
+        print_result(build_lst[i] ,(string) inp , req_set);
+        // cout << "result for bulding " << build_lst[i] <<  (string) inp << endl;
+        // cout << "*************" << endl;
         waitpid(build_pid_lst[i] , &status , 0);
         
     }
+    cout << Red_COLOR<< "end" << RESET_COLOR<< endl;
     
 }
 

@@ -124,6 +124,7 @@ string calc_bill_water(string data ,
 
 void rsv_and_calc_bills(vector<string>& build_lst ,
     vector<int>& gas_coef , vector<int>& water_coef , vector<int>& elec_coef){
+
         for(int i=0 ; i < build_lst.size() ; i++){
             auto p = build_lst[i];
             int fd = open(p.c_str() , O_RDONLY);
@@ -132,6 +133,8 @@ void rsv_and_calc_bills(vector<string>& build_lst ,
             while (size < 2)
                 size =read(fd , inp , 1024);
             auto data_lst = getWords((string) inp , "$");
+            print_log("rcv data from " + build_lst[i]);
+
             string gas_bill = calc_bill_gas(data_lst[0] , gas_coef , water_coef , elec_coef);
             
             string water_bill = calc_bill_water(data_lst[1] , gas_coef , water_coef , elec_coef);
@@ -143,6 +146,8 @@ void rsv_and_calc_bills(vector<string>& build_lst ,
                 + elec_bill + "$";
             close(fd);
             fd = open(p.c_str() , O_WRONLY);
+            print_log("send data to " + build_lst[i]);
+
             write(fd , send_data_str.c_str() , send_data_str.size());
             close(fd);
             
@@ -154,16 +159,19 @@ int main(int argc , const char *argv[]){
     cin.tie(NULL);
    
     string build_path = (string) argv[1];
+    print_log("start office");
+
     vector<int> gas_coef(13) , water_coef(13),elec_coef(13);
     read_file(gas_coef , water_coef , elec_coef , build_path);
     char inp[1024];
     read(STDIN_FILENO , inp , 1024);
-    cout << "in offic " << (string) inp << endl;
+    
     vector<string> build_lst = getWords((string) inp , " ");
     
     make_unnamed_pipe(build_lst , build_path);
     rsv_and_calc_bills(build_lst , gas_coef , water_coef , elec_coef);
-    
+    close(STDIN_FILENO);
+    print_log("end office");
     return 0;
 }
 
