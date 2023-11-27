@@ -21,7 +21,7 @@ int main(int argc , const char *argv[]){
     cin.tie(NULL);
      
     string my_folder = (string)  argv[1];
-    print_log("start gas" + my_folder);
+    print_log("start gas " + my_folder);
 
     string file_string = my_folder + "/" + GAS_CSV;
     fstream *file = new fstream(file_string.c_str());
@@ -32,7 +32,7 @@ int main(int argc , const char *argv[]){
    
 
     close(STDOUT_FILENO);
-    print_log("end gas" + my_folder);
+    print_log("end gas " + my_folder);
 }
 
 

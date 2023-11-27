@@ -17,7 +17,7 @@ int main(int argc , const char *argv[]){
     ios_base::sync_with_stdio(false);
     cin.tie(NULL);
     string my_folder = (string)  argv[1];
-    print_log("start elec" + my_folder);
+    print_log("start elec " + my_folder);
 
     string file_string = my_folder + "/" + ELEC_CSV;
     fstream *file = new fstream(file_string.c_str());
@@ -26,7 +26,7 @@ int main(int argc , const char *argv[]){
     data->calc_average_total_and_dist();
     send_data(data);
     close(STDOUT_FILENO);
-    print_log("end elec" + my_folder);
+    print_log("end elec " + my_folder);
 }
 
 

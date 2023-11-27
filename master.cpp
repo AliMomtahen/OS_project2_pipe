@@ -140,6 +140,7 @@ int   creat_proccess(vector<string> &build_lst ,vector<int>& build_pid_lst ,
     }
 
     int office_pipe_w;
+    print_log("main make procces");
     office_pid=  make_office_proc(office_pipe_w , building_dir);
     send_line_to_pipe(office_pipe_w , build_lst);
     for(int i=0;i<build_lst.size() ; i++){
@@ -175,7 +176,7 @@ void get_input_and_send_data(vector<string> &build_lst ,vector<int>& build_pid_l
     print_log("get input");
 
             string lin1 , lin2 , lin3;
-            cout << Green_COLOR <<  "the sources is 0-gas 1-water 2-electricity\npleas inter id of sources:" << RESET_COLOR << endl;
+            cout << Green_COLOR <<  "the sources is 1-gas 2-water 3-electricity\npleas inter id of sources:" << RESET_COLOR << endl;
             getline(cin , lin1);
             cout << Green_COLOR <<  "pleas inter buildings:" << RESET_COLOR << endl;
             getline(cin , lin2);
@@ -198,13 +199,44 @@ void get_input_and_send_data(vector<string> &build_lst ,vector<int>& build_pid_l
 
 }
 
+void print_a_line(){
+    cout << Yellow_COLOR ;
+    cout << "============================";
+    for(int i=0 ;i <= 12 ;i++){
+        cout << "==========";
+    }
+    cout << RESET_COLOR << endl;
+}
+void print_space(string c  ,int ff){
+    cout << Yellow_COLOR;
+    int k=10;
+    if(ff == 0){
+        k=25;
+    }
+    for(int i=0 ;i < k - c.size()  ;i++){
+        cout << " ";
+    }
+    cout << RESET_COLOR;
+}
+
 
 void print_buty(vector<vector<string>> lst){
+    int f=0;
+    print_a_line();
     for(auto l : lst)
         {
-            for(auto c : l)
-                cout << c << " ";
-            cout << endl;
+            int ff=0;
+            for(auto c : l){
+                cout << Yellow_COLOR << "|" << RESET_COLOR;
+                if(f==0)
+                    cout << Green_COLOR;
+                cout << c;
+                print_space(c , ff);
+                ff=1;
+            }
+            cout << Yellow_COLOR << "|" << RESET_COLOR<<  endl;
+            print_a_line();
+            f=1;
         }
 }
 void print_src(struct Set_sets *req_set , string data){
@@ -215,23 +247,23 @@ void print_src(struct Set_sets *req_set , string data){
     switch (stoi(word[0]))
     {
     case 1:
-        cout << Red_COLOR << "gas report:" << RESET_COLOR << endl;
+        cout << Red_COLOR << "\n\ngas report:" << RESET_COLOR << endl;
         break;
     case 2:
-        cout << Red_COLOR << "water report:" << RESET_COLOR << endl;
+        cout << Red_COLOR << "\n\nwater report:" << RESET_COLOR << endl;
 
     break;
     case 3:
-        cout << Red_COLOR << "electricity report:" << RESET_COLOR << endl;
+        cout << Red_COLOR << "\n\nelectricity report:" << RESET_COLOR << endl;
 
     break;
     default:
         break;
     }
     for(int i=0;i<12;i++){
-        auto s="";
+        string s="month ";
         if(i < 9)
-            s = "0";
+            s += "0";
         str_d[0].push_back(s + to_string(i+1));
 
     }
@@ -262,6 +294,8 @@ void print_result(string build_name , string data , struct Set_sets *req_set){
         
         print_src(req_set , srcs[src_id -1]);
     }
+
+    cout << Blue_COLOR << "\n\n***********************\n\n" << endl;  
     
 
 }
@@ -270,6 +304,7 @@ void print_result(string build_name , string data , struct Set_sets *req_set){
 int main(int argc , const char *argv[]){
     ios_base::sync_with_stdio(false);
     cin.tie(NULL);
+    print_log("open file")
     print_log("start work main");
     if(argc < 2){
         cout << "input not valid\n";
@@ -284,7 +319,7 @@ int main(int argc , const char *argv[]){
     int office_pid=-1;
     creat_proccess(build_lst , build_pid_lst ,read_pipe_lst ,  building_dir , office_pid);
     get_input_and_send_data(build_lst , build_pid_lst ,read_pipe_lst , req_set);
-    
+    cout << Blue_COLOR << "\n\n***********************\n\n" << endl;  
     for(int i=0 ; i < build_lst.size();i++){
         int status;
         
@@ -292,8 +327,7 @@ int main(int argc , const char *argv[]){
         read(read_pipe_lst[i] , inp , 2048);
         close(read_pipe_lst[i]);
         print_result(build_lst[i] ,(string) inp , req_set);
-        // cout << "result for bulding " << build_lst[i] <<  (string) inp << endl;
-        // cout << "*************" << endl;
+        
         waitpid(build_pid_lst[i] , &status , 0);
         
     }

@@ -57,6 +57,7 @@ void get_data_file(string my_data_path , struct Data_src * data){
     
     
     int water_r , gas_r , elec_r; 
+    print_log(my_data_path + " make prossecc gas water elec");
     int pid_water = make_proc(my_data_path ,WATER_EXE  , water_r);
     int pid_gas = make_proc(my_data_path ,GAS_EXE  , gas_r);
     int pid_elec = make_proc(my_data_path ,ELEC_EXE  , elec_r);
@@ -69,7 +70,7 @@ void get_data_file(string my_data_path , struct Data_src * data){
     data->water_data = (string) inp1;
     read(elec_r , inp2 , 1024);
     data->elec_data = (string) inp2;
-    print_log(my_data_path +  "get data from src");
+    print_log(my_data_path +  "get data from gas water and elec");
 
     
     waitpid(pid_elec , &status , 0);
@@ -118,7 +119,7 @@ int main(int argc , const char *argv[]){
     ios_base::sync_with_stdio(false);
     cin.tie(NULL);
     string my_data_path = (string) argv[1];
-    print_log(my_data_path +  "start work");
+    print_log(my_data_path +  "start work ");
     
     struct Data_src *data = new struct Data_src;
     get_data_file(my_data_path , data);

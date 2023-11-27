@@ -57,6 +57,7 @@ void read_file(vector<int>& gas_coef , vector<int>& water_coef , vector<int>& el
         elec_coef[i] = stoi(words[4]);
         
     }
+    print_log("office read bill coef file");
 
 }
 
@@ -102,7 +103,7 @@ string calc_bill_water(string data ,
    vector<int>& gas_coef , vector<int>& water_coef , vector<int>& elec_coef ){
 
     vector<string> word = getWords(data , "\n");
-    cout << word[0] << endl;
+    
    
     vector<string> str_tot = getWords(word[2] , " ");
     vector<string> str_aver = getWords(word[1] , " ");
@@ -133,7 +134,7 @@ void rsv_and_calc_bills(vector<string>& build_lst ,
             while (size < 2)
                 size =read(fd , inp , 1024);
             auto data_lst = getWords((string) inp , "$");
-            print_log("rcv data from " + build_lst[i]);
+            print_log("office rcv data from " + build_lst[i]);
 
             string gas_bill = calc_bill_gas(data_lst[0] , gas_coef , water_coef , elec_coef);
             
@@ -141,12 +142,12 @@ void rsv_and_calc_bills(vector<string>& build_lst ,
 
             
             string elec_bill = calc_bill_elec(data_lst[2] , gas_coef , water_coef , elec_coef);
-            
+            print_log("office calc bills");
             string send_data_str = gas_bill + "$" + water_bill + "$" 
                 + elec_bill + "$";
             close(fd);
             fd = open(p.c_str() , O_WRONLY);
-            print_log("send data to " + build_lst[i]);
+            print_log("office send data to " + build_lst[i]);
 
             write(fd , send_data_str.c_str() , send_data_str.size());
             close(fd);
@@ -159,10 +160,11 @@ int main(int argc , const char *argv[]){
     cin.tie(NULL);
    
     string build_path = (string) argv[1];
-    print_log("start office");
+    print_log("start office ");
 
     vector<int> gas_coef(13) , water_coef(13),elec_coef(13);
     read_file(gas_coef , water_coef , elec_coef , build_path);
+
     char inp[1024];
     read(STDIN_FILENO , inp , 1024);
     
@@ -171,7 +173,7 @@ int main(int argc , const char *argv[]){
     make_unnamed_pipe(build_lst , build_path);
     rsv_and_calc_bills(build_lst , gas_coef , water_coef , elec_coef);
     close(STDIN_FILENO);
-    print_log("end office");
+    print_log("end office ");
     return 0;
 }
 

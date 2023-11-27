@@ -69,9 +69,10 @@ vector<string> getWords(string s , string spliter){
 
 void print_log(string s){
     ofstream f;
-    
-    
-    f.open(LOG_TXT , ios::app);
+    if(s == "open file")
+        f.open(LOG_TXT , ios::out);
+    else
+        f.open(LOG_TXT , ios::app);
     f << s << endl;
     f.close();
 }
